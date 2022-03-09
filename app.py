@@ -3,6 +3,7 @@ from flask_session import Session
 from werkzeug.utils import secure_filename
 import os
 import scripts.train as train
+import scripts.predict as pred
 
 # specifying the path where the file will be stored in the filesystem
 UPLOAD_FOLDER = "static/files"
@@ -15,10 +16,12 @@ app.config["SESSION_PERMANENT"] = False
 app.config["SESSION_TYPE"] = "filesystem"
 Session(app)
 
+# **************************HOME ROUTE - SERVES TRAINING DATA UPLOAD FORM*****************************
 @app.route("/")
 def home():
     return render_template("train_upload.html")
 
+# **************************PREDICT ROUTE - SERVES TEST DATA UPLOAD FORM****************************
 @app.route('/predict')
 def predict():
     return render_template('test_upload.html')
@@ -55,6 +58,8 @@ async def upload_test():
             flash("File uploaded successfully")
             filename = secure_filename(file.filename)
             file.save(os.path.join(app.config["UPLOAD_FOLDER"], filename))
+            predictions = await predict_results(os.path.join(app.config["UPLOAD_FOLDER"], filename), 'static/pickle/lr_model.pkl', 'static/pickle/cv.pkl', 'Description')
+            print(predictions)
             return render_template('result.html')
         return render_template('test_upload.html')
 
@@ -68,9 +73,18 @@ def allowed_file(filename):
     return '.' in filename and \
            filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
 
+# asynchronous function to preprocess the training data, train the model and save the model
 async def train_model(file_path, model_path, cv_path, feature_col, label_col):
     train_df = train.read_csv_file(file_path)
     train_df = train.encode_labels(train_df, label_col)
     train_df = train.preprocess(train_df, feature_col)
     y, x_vector = train.vectorize(train_df, feature_col, label_col, cv_path)
     train.train_lr_model(x_vector, y, model_path)
+
+# asynchronous function to load the count vectorizer, model and use them to predict the results
+async def predict_results(file_path, model_path, cv_path, feature_col):
+    test_df = pred.read_csv_file(file_path)
+    test_df = pred.preprocess(test_df, feature_col)
+    test_df_vector = pred.vectorize(test_df, feature_col, cv_path)
+    predictions = pred.predict_results(test_df_vector, model_path)
+    return predictions
