@@ -1,3 +1,4 @@
+import numpy as np
 import pandas as pd
 import pickle
 import string
@@ -32,7 +33,9 @@ def vectorize(df, col_name, cv_path):
     df_vector = cv.transform(df[col_name])
     return df_vector
 
-def predict_results(df_vector, model_path):
+def predict_results(df_vector, model_path, le_path):
     lr = pickle.load(open(model_path,'rb'))
     predict = lr.predict(df_vector)
+    le = pickle.load(open(le_path, 'rb'))
+    predict = le.inverse_transform(predict)
     return predict

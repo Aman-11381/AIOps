@@ -12,9 +12,10 @@ def read_csv_file(path):
     train_df = train_df[['Level','Description']]
     return train_df
 
-def encode_labels(df, label_col):
+def encode_labels(df, label_col, le_path):
     encoder = LabelEncoder()
     df[label_col] = encoder.fit_transform(df[label_col])
+    pickle.dump(encoder, open(le_path, 'wb'))
     return df
 
 def extract_words(text):
