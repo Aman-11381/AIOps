@@ -4,6 +4,7 @@ from werkzeug.utils import secure_filename
 import os
 import scripts.train as train
 import scripts.predict as pred
+import scripts.preprocess as preprocess
 
 # specifying the path where the file will be stored in the filesystem
 UPLOAD_FOLDER = "static/files"
@@ -83,14 +84,14 @@ def allowed_file(filename):
 async def train_model(file_path, model_path, cv_path, feature_col, label_col, le_path):
     train_df = train.read_csv_file(file_path)
     train_df = train.encode_labels(train_df, label_col, le_path)
-    train_df = train.preprocess(train_df, feature_col)
+    train_df = preprocess.preprocess(train_df, feature_col)
     y, x_vector = train.vectorize(train_df, feature_col, label_col, cv_path)
     train.train_lr_model(x_vector, y, model_path)
 
 # asynchronous function to load the count vectorizer, model and use them to predict the results
 async def predict_results(file_path, model_path, cv_path, feature_col, le_path):
     test_df = pred.read_csv_file(file_path)
-    test_df = pred.preprocess(test_df, feature_col)
+    test_df = preprocess.preprocess(test_df, feature_col)
     test_df_vector = pred.vectorize(test_df, feature_col, cv_path)
     predictions = pred.predict_results(test_df_vector, model_path, le_path)
     pred.add_predictions(predictions, file_path)
