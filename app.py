@@ -1,4 +1,4 @@
-from flask import Flask, redirect, render_template, request, flash, session, url_for
+from flask import Flask, redirect, render_template, request, flash, send_from_directory, url_for
 from flask_session import Session
 from werkzeug.utils import secure_filename
 import os
@@ -61,8 +61,13 @@ async def upload_test():
             file.save(os.path.join(app.config["UPLOAD_FOLDER"], filename))
             predictions = await predict_results(os.path.join(app.config["UPLOAD_FOLDER"], filename), 'static/pickle/lr_model.pkl', 'static/pickle/cv.pkl', 'Description', 'static/pickle/le.pkl')
             print(predictions)
-            return render_template('result.html')
+            # return render_template('result.html')
+            return redirect(url_for('download'))
         return render_template('test_upload.html')
+    
+@app.route('/download')
+def download():
+    return send_from_directory(app.config["UPLOAD_FOLDER"], 'log_test.csv')
 
 if __name__ == "__main__":
     app.secret_key = 'super secret key'
@@ -88,4 +93,5 @@ async def predict_results(file_path, model_path, cv_path, feature_col, le_path):
     test_df = pred.preprocess(test_df, feature_col)
     test_df_vector = pred.vectorize(test_df, feature_col, cv_path)
     predictions = pred.predict_results(test_df_vector, model_path, le_path)
+    pred.add_predictions(predictions, file_path)
     return predictions

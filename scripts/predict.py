@@ -39,3 +39,8 @@ def predict_results(df_vector, model_path, le_path):
     le = pickle.load(open(le_path, 'rb'))
     predict = le.inverse_transform(predict)
     return predict
+
+def add_predictions(predictions, file_path):
+    test_df_final = pd.read_csv(file_path)
+    test_df_final.insert(0, "Level", predictions, True)
+    test_df_final.to_csv(file_path, index=False)
