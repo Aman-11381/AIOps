@@ -74,8 +74,6 @@ async def upload_test():
             filename = secure_filename(file.filename)
             file.save(os.path.join(app.config["UPLOAD_FOLDER"], filename))
             return redirect(url_for('test_preview', filename=filename))
-            # predictions = await predict_results(os.path.join(app.config["UPLOAD_FOLDER"], filename), 'static/pickle/lr_model.pkl', 'static/pickle/cv.pkl', 'Description', 'static/pickle/le.pkl')
-            # return redirect(url_for('download'))
         return render_template('test_upload.html')
 
 @app.route('/test_preview/<filename>')
@@ -87,14 +85,10 @@ def test_preview(filename):
 async def predicting():
     if(request.method == 'POST'):
         filename = request.form['filename']
-        predictions = await predict_results(os.path.join(app.config["UPLOAD_FOLDER"], filename), 'static/pickle/lr_model.pkl', 'static/pickle/cv.pkl', 'Description', 'static/pickle/le.pkl')
-        return redirect(url_for('download'))
-
-@app.route('/dataset')
-def dataset():
-    table = pd.read_csv('static/files/system.csv')
-    table = table.iloc[:51,:]
-    return render_template('dataset.html', tables=[table.to_html()], titles=[''])
+        await predict_results(os.path.join(app.config["UPLOAD_FOLDER"], filename), 'static/pickle/lr_model.pkl', 'static/pickle/cv.pkl', 'Description', 'static/pickle/le.pkl')
+        result = pd.read_csv(os.path.join(app.config["UPLOAD_FOLDER"], filename))
+        return render_template('result_preview.html', tables=[result.to_html()], titles=[''], filename=filename)
+        # return redirect(url_for('download'))
  
 @app.route('/download')
 def download():
@@ -125,4 +119,3 @@ async def predict_results(file_path, model_path, cv_path, feature_col, le_path):
     test_df_vector = pred.vectorize(test_df, feature_col, cv_path)
     predictions = pred.predict_results(test_df_vector, model_path, le_path)
     pred.add_predictions(predictions, file_path)
-    return predictions

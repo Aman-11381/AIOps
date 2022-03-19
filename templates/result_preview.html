@@ -8,9 +8,9 @@
 </head>
 <body>
     <div align="center">
-            <form method="POST" action="{{ url_for('training') }}">
-                <p><input type="hidden" name="filename" value="{{filename}}"></p>
-                <p><input type="submit" value="Train Model"></p>
+            <form method="GET" action="{{ url_for('download') }}">
+                <!-- <p><input type="hidden" name="filename" value="{{filename}}"></p> -->
+                <p><input type="submit" value="Download"></p>
             </form>
             <table>
                 <h1>
