@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <div align="center">
+            <form method="POST" action="{{ url_for('predicting') }}">
+                <p><input type="hidden" name="filename" value="{{filename}}"></p>
+                <p><input type="submit" value="Submit"></p>
+            </form>
+            <table>
+                <h1>
+                    <!--Displaying the converted table-->
+                    {% for table in tables %}
+                        <h2>{{titles[loop.index]}}</h2>                            
+                        {{ table|safe }}
+                    {% endfor %}     
+                </h1> 
+            </table>
+    </div>
+</body>
+</html>

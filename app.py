@@ -5,6 +5,7 @@ import os
 import scripts.train as train
 import scripts.predict as pred
 import scripts.preprocess as preprocess
+import pandas as pd
 
 # specifying the path where the file will be stored in the filesystem
 UPLOAD_FOLDER = "static/files"
@@ -42,11 +43,23 @@ async def upload_train():
             flash("File uploaded successfully")
             filename = secure_filename(file.filename)
             file.save(os.path.join(app.config["UPLOAD_FOLDER"], filename))
-            await train_model(os.path.join(app.config["UPLOAD_FOLDER"], filename), 'static/pickle/lr_model.pkl', 'static/pickle/cv.pkl', 'Description', 'Level', 'static/pickle/le.pkl')
-            return redirect( url_for('predict'))
+            return redirect(url_for('train_preview', filename=filename))
         return render_template('train_upload.html')
 
-@app.route('/upload_test',methods=['POST'])
+@app.route('/train_preview/<filename>')
+def train_preview(filename):
+    train_data = pd.read_csv(os.path.join(app.config["UPLOAD_FOLDER"], filename))
+    train_data = train_data.iloc[:51,:]
+    return render_template('train_preview.html', tables=[train_data.to_html()], titles=[''], filename=filename)
+
+@app.route('/training', methods=["POST"])
+async def training():
+    if(request.method == 'POST'):
+        filename = request.form['filename']
+        await train_model(os.path.join(app.config["UPLOAD_FOLDER"], filename), 'static/pickle/lr_model.pkl', 'static/pickle/cv.pkl', 'Description', 'Level', 'static/pickle/le.pkl')
+        return redirect( url_for('predict'))
+
+@app.route('/upload_test', methods=['POST'])
 async def upload_test():
     if request.method == 'POST':
         if 'file' not in request.files:
@@ -60,12 +73,29 @@ async def upload_test():
             flash("File uploaded successfully")
             filename = secure_filename(file.filename)
             file.save(os.path.join(app.config["UPLOAD_FOLDER"], filename))
-            predictions = await predict_results(os.path.join(app.config["UPLOAD_FOLDER"], filename), 'static/pickle/lr_model.pkl', 'static/pickle/cv.pkl', 'Description', 'static/pickle/le.pkl')
-            print(predictions)
-            # return render_template('result.html')
-            return redirect(url_for('download'))
+            return redirect(url_for('test_preview', filename=filename))
+            # predictions = await predict_results(os.path.join(app.config["UPLOAD_FOLDER"], filename), 'static/pickle/lr_model.pkl', 'static/pickle/cv.pkl', 'Description', 'static/pickle/le.pkl')
+            # return redirect(url_for('download'))
         return render_template('test_upload.html')
-    
+
+@app.route('/test_preview/<filename>')
+def test_preview(filename):
+    test_data = pd.read_csv(os.path.join(app.config["UPLOAD_FOLDER"], filename))
+    return render_template('test_preview.html', tables=[test_data.to_html()], titles=[''], filename=filename)
+
+@app.route('/predicting', methods=['POST'])
+async def predicting():
+    if(request.method == 'POST'):
+        filename = request.form['filename']
+        predictions = await predict_results(os.path.join(app.config["UPLOAD_FOLDER"], filename), 'static/pickle/lr_model.pkl', 'static/pickle/cv.pkl', 'Description', 'static/pickle/le.pkl')
+        return redirect(url_for('download'))
+
+@app.route('/dataset')
+def dataset():
+    table = pd.read_csv('static/files/system.csv')
+    table = table.iloc[:51,:]
+    return render_template('dataset.html', tables=[table.to_html()], titles=[''])
+ 
 @app.route('/download')
 def download():
     return send_from_directory(app.config["UPLOAD_FOLDER"], 'log_test.csv')
