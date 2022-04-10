@@ -88,11 +88,11 @@ async def predicting():
         await predict_results(os.path.join(app.config["UPLOAD_FOLDER"], filename), 'static/pickle/lr_model.pkl', 'static/pickle/cv.pkl', 'Description', 'static/pickle/le.pkl')
         result = pd.read_csv(os.path.join(app.config["UPLOAD_FOLDER"], filename))
         return render_template('result_preview.html', tables=[result.to_html()], titles=[''], filename=filename)
-        # return redirect(url_for('download'))
  
-@app.route('/download')
+@app.route('/download', methods=['POST'])
 def download():
-    return send_from_directory(app.config["UPLOAD_FOLDER"], 'log_test.csv')
+    filename = request.form['filename']
+    return send_from_directory(app.config["UPLOAD_FOLDER"], filename)
 
 if __name__ == "__main__":
     app.secret_key = 'super secret key'
@@ -118,4 +118,4 @@ async def predict_results(file_path, model_path, cv_path, feature_col, le_path):
     test_df = preprocess.preprocess(test_df, feature_col)
     test_df_vector = pred.vectorize(test_df, feature_col, cv_path)
     predictions = pred.predict_results(test_df_vector, model_path, le_path)
-    pred.add_predictions(predictions, file_path)
+    pred.add_predictions(predictions, file_path)  

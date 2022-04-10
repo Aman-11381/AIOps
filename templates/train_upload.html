@@ -7,10 +7,12 @@
         <title>AIOps</title>
     </head>
     <body>
-        <h1>Upload your csv file for training model</h1>
-        <form method="POST" action="{{ url_for('upload_train') }}" enctype="multipart/form-data">
-            <p><input type="file" name="file"></p>
-            <p><input type="submit" value="Upload File"></p>
-        </form>
+        <div align="center">
+            <h1>Upload your csv file for training model</h1>
+            <form method="POST" action="{{ url_for('upload_train') }}" enctype="multipart/form-data">
+                <p><input type="file" name="file"></p>
+                <p><input type="submit" value="Upload File"></p>
+            </form>
+        </div>
     </body>
 </html>
