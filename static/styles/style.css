@@ -1,0 +1,8 @@
+html, body {
+    max-width: 100%;
+}
+
+th {
+    text-align: left;
+    white-space: nowrap;
+}
