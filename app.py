@@ -49,7 +49,7 @@ async def upload_train():
 @app.route('/train_preview/<filename>')
 def train_preview(filename):
     train_data = pd.read_csv(os.path.join(app.config["UPLOAD_FOLDER"], filename))
-    train_data = train_data.iloc[:51,:]
+    # train_data = train_data.iloc[:51,:]
     return render_template('train_preview.html', tables=[train_data.to_html()], titles=[''], filename=filename)
 
 @app.route('/training', methods=["POST"])
