@@ -1,9 +1,9 @@
-Level,Date and Time,Source,Event ID,Task Category,Description
-Information,02-11-2022 08:49,Microsoft-Windows-Security-SPP,16394,None,Offline downlevel migration succeeded.
-Information,02-11-2022 08:49,Microsoft-Windows-Security-SPP,16384,None,Successfully scheduled Software Protection service for re-start at 2022-02-12T02:28:11Z. Reason: RulesEngine.
-Information,02-11-2022 08:48,LMS,2000,-3,Local Management Service started.
-Information,02-11-2022 08:48,LMS,0,None,Service started/resumed
-Information,02-11-2022 08:48,System Restore,8216,None,Skipping creation of restore point (Process = C:\WINDOWS\system32\svchost.exe -k netsvcs -p -s wuauserv; Description = Windows Update) as there is a restore point avaliable which is recent enough for System Restore.
-Information,02-11-2022 08:48,IntelDalJhi,0,None,Intel(R) Dynamic Application Loader Host Interface Service started.
-Information,02-11-2022 08:48,System Restore,8216,None,Skipping creation of restore point (Process = C:\WINDOWS\system32\svchost.exe -k netsvcs -p -s wuauserv; Description = Windows Update) as there is a restore point avaliable which is recent enough for System Restore.
-Information,02-11-2022 08:48,System Restore,8216,None,Skipping creation of restore point (Process = C:\WINDOWS\system32\svchost.exe -k netsvcs -p -s wuauserv; Description = Windows Update) as there is a restore point avaliable which is recent enough for System Restore.
+Date and Time,Source,Event ID,Task Category,Description
+02-11-2022 08:49,Microsoft-Windows-Security-SPP,16394,None,Offline downlevel migration succeeded.
+02-11-2022 08:49,Microsoft-Windows-Security-SPP,16384,None,Successfully scheduled Software Protection service for re-start at 2022-02-12T02:28:11Z. Reason: RulesEngine.
+02-11-2022 08:48,LMS,2000,-3,Local Management Service started.
+02-11-2022 08:48,LMS,0,None,Service started/resumed
+02-11-2022 08:48,System Restore,8216,None,Skipping creation of restore point (Process = C:\WINDOWS\system32\svchost.exe -k netsvcs -p -s wuauserv; Description = Windows Update) as there is a restore point avaliable which is recent enough for System Restore.
+02-11-2022 08:48,IntelDalJhi,0,None,Intel(R) Dynamic Application Loader Host Interface Service started.
+02-11-2022 08:48,System Restore,8216,None,Skipping creation of restore point (Process = C:\WINDOWS\system32\svchost.exe -k netsvcs -p -s wuauserv; Description = Windows Update) as there is a restore point avaliable which is recent enough for System Restore.
+02-11-2022 08:48,System Restore,8216,None,Skipping creation of restore point (Process = C:\WINDOWS\system32\svchost.exe -k netsvcs -p -s wuauserv; Description = Windows Update) as there is a restore point avaliable which is recent enough for System Restore.
