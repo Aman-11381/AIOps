@@ -12,6 +12,7 @@
 <body>
     <div class="container" align="center">
         <br>
+        <p><a href="{{url_for('training')}}"><button class="btn btn-primary">Upload Again</button></a></p>
         <form method="POST" action="{{ url_for('predicting') }}">
             <p><input type="hidden" name="filename" value="{{filename}}"></p>
             <p><input class="btn btn-primary" type="submit" value="Get Predictions"></p>

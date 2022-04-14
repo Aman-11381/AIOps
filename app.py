@@ -56,12 +56,12 @@ def train_preview(filename):
     # train_data = train_data.iloc[:51,:]
     return render_template('train_preview.html', tables=[train_data.to_html()], filename=filename)
 
-@app.route('/training', methods=["POST"])
+@app.route('/training', methods=['GET','POST'])
 async def training():
     if(request.method == 'POST'):
         filename = request.form['filename']
         await train_model(os.path.join(app.config["UPLOAD_FOLDER"], filename), 'static/pickle/lr_model.pkl', 'static/pickle/cv.pkl', 'Description', 'Level', 'static/pickle/le.pkl')
-        return redirect( url_for('predict'))
+    return redirect( url_for('predict'))
 
 @app.route('/upload_test', methods=['POST'])
 async def upload_test():
