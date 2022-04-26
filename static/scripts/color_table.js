@@ -1,5 +1,6 @@
-$('div.table-wrapper table tbody tr').each(function(){
-    let level = $(this).find('td:eq(0)').text()
+// $('div.table-wrapper table tbody tr').each(function(){
+$('#train-preview').each(function(){
+    let level = $(this).find('td:eq(1)').text()
 
     if (level == 'Information'){
         $(this).addClass('table-info')

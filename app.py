@@ -8,6 +8,8 @@ import scripts.predict as pred
 import scripts.preprocess as preprocess
 import pandas as pd
 import json
+import csv
+from pathlib import Path
 import plotly
 import plotly.express as px
 
@@ -28,11 +30,6 @@ Session(app)
 def home():
     return render_template("train_upload.html")
 
-# **************************PREDICT ROUTE - SERVES TEST DATA UPLOAD FORM****************************
-@app.route('/predict')
-def predict():
-    return render_template('test_upload.html')
-
 @app.route("/upload_train", methods=["POST"])
 async def upload_train():
     if request.method == 'POST':
@@ -47,14 +44,17 @@ async def upload_train():
             flash("File uploaded successfully")
             filename = secure_filename(file.filename)
             file.save(os.path.join(app.config["UPLOAD_FOLDER"], filename))
+            csv_to_json(os.path.join(app.config["UPLOAD_FOLDER"], filename), "train.json")
             return redirect(url_for('train_preview', filename=filename))
         return render_template('train_upload.html')
 
 @app.route('/train_preview/<filename>')
 def train_preview(filename):
-    train_data = pd.read_csv(os.path.join(app.config["UPLOAD_FOLDER"], filename))
-    # train_data = train_data.iloc[:51,:]
-    return render_template('train_preview.html', tables=[train_data.to_html()], filename=filename)
+    # train_data = pd.read_csv(os.path.join(app.config["UPLOAD_FOLDER"], filename))
+    
+    # return render_template('train_preview.html', tables=[train_data.to_html()], filename=filename)
+    return render_template('train_preview.html', filename=filename)
+
 
 @app.route('/training', methods=['GET','POST'])
 async def training():
@@ -62,6 +62,12 @@ async def training():
         filename = request.form['filename']
         await train_model(os.path.join(app.config["UPLOAD_FOLDER"], filename), 'static/pickle/lr_model.pkl', 'static/pickle/cv.pkl', 'Description', 'Level', 'static/pickle/le.pkl')
     return redirect( url_for('predict'))
+
+# **************************PREDICT ROUTE - SERVES TEST DATA UPLOAD FORM****************************
+@app.route('/predict')
+def predict():
+    return render_template('test_upload.html')
+
 
 @app.route('/upload_test', methods=['POST'])
 async def upload_test():
@@ -77,6 +83,7 @@ async def upload_test():
             flash("File uploaded successfully")
             filename = secure_filename(file.filename)
             file.save(os.path.join(app.config["UPLOAD_FOLDER"], filename))
+            csv_to_json(os.path.join(app.config["UPLOAD_FOLDER"], filename), "test.json")
             return redirect(url_for('test_preview', filename=filename))
         return render_template('test_upload.html')
 
@@ -91,6 +98,7 @@ async def predicting():
         filename = request.form['filename']
         await predict_results(os.path.join(app.config["UPLOAD_FOLDER"], filename), 'static/pickle/lr_model.pkl', 'static/pickle/cv.pkl', 'Description', 'static/pickle/le.pkl')
         result = pd.read_csv(os.path.join(app.config["UPLOAD_FOLDER"], filename))
+        csv_to_json(os.path.join(app.config["UPLOAD_FOLDER"], filename), "result.json")
 
         # generates a dataframe with the count values of the level column in sorted order
         df_count = result['Level'].value_counts().rename_axis('Level').reset_index(name='counts')
@@ -152,3 +160,17 @@ async def predict_results(file_path, model_path, cv_path, feature_col, le_path):
     test_df_vector = pred.vectorize(test_df, feature_col, cv_path)
     predictions = pred.predict_results(test_df_vector, model_path, le_path)
     pred.add_predictions(predictions, file_path)
+
+def csv_to_json(csv_file_path, json_file_name):
+
+    json_file_path = os.path.join(app.config["UPLOAD_FOLDER"], json_file_name) 
+
+    data={}
+    with open(csv_file_path) as csv_file:
+        data["data"] = []
+        csv_reader = csv.DictReader(csv_file)
+        for rows in csv_reader:
+            data["data"].append(rows)
+    
+    with open(json_file_path, 'w') as json_file:
+        json_file.write(json.dumps(data, indent=4))
