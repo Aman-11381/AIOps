@@ -113,7 +113,14 @@ async def predicting():
 
         pie_graphJSON = json.dumps(fig_pie, cls=plotly.utils.PlotlyJSONEncoder)
 
-        return render_template('result_preview.html', tables=[result.to_html()], filename=filename, bar_graphJSON=bar_graphJSON, pie_graphJSON=pie_graphJSON)
+        df_source = result[result.Level.isin(['Error','Critical'])]
+        df_source = df_source['Source'].value_counts().rename_axis('Source').reset_index(name='counts').iloc[:5,:]
+
+        fig_funnel = px.funnel(df_source, x='counts', y='Source', color='Source')
+
+        funnel_graphJSON = json.dumps(fig_funnel, cls=plotly.utils.PlotlyJSONEncoder)
+
+        return render_template('result_preview.html', tables=[result.to_html()], filename=filename, bar_graphJSON=bar_graphJSON, pie_graphJSON=pie_graphJSON, funnel_graphJSON=funnel_graphJSON)
  
 @app.route('/download', methods=['POST'])
 def download():
@@ -144,4 +151,4 @@ async def predict_results(file_path, model_path, cv_path, feature_col, le_path):
     test_df = preprocess.preprocess(test_df, feature_col)
     test_df_vector = pred.vectorize(test_df, feature_col, cv_path)
     predictions = pred.predict_results(test_df_vector, model_path, le_path)
-    pred.add_predictions(predictions, file_path)  
+    pred.add_predictions(predictions, file_path)

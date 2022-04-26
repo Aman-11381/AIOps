@@ -13,7 +13,9 @@
 <body>
     <div class="container" align="center">
         <br>
-        <p><a href="{{url_for('home')}}"><button class="btn btn-primary">Upload Again</button></a></p>
+        <h2>Training File Preview</h2>
+        <br>
+        <p><a href="{{url_for('home')}}"><button class="btn btn-danger">Upload Again</button></a></p>
         <form method="POST" action="{{ url_for('training') }}">
             <p><input type="hidden" name="filename" value="{{filename}}"></p>
             <p><input class="btn btn-primary" type="submit" value="Train Model"></p>

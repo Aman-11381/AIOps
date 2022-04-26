@@ -11,16 +11,29 @@
 </head>
 <body>
     <div class="container" align="center">
+        <br>
         <div class="row">
-            <h2>Summary</h2>
+            <h2>Prediction Results</h2>
         </div>
 
+        <br>
+
         <div class="row">
+            <h5>Summary of Classified Logs</h5>
             <div class="col">
                 <div id='bar_chart' class='bar_chart'></div>
             </div>
             <div class="col">
                 <div id='pie_chart' class='pie_chart'></div>
+            </div>
+        </div>
+        
+        <br>
+
+        <div class="row">
+            <h5>Top 5 Sources of Error and Critical Logs</h5>
+            <div class="col">
+                <div id='funnel_chart' class='funnel_chart'></div>
             </div>
         </div>
 
@@ -49,6 +62,8 @@
         Plotly.plot('bar_chart',bar_graph,{});
         var pie_graph = {{pie_graphJSON|safe}};
         Plotly.plot('pie_chart',pie_graph,{});
+        var funnel_graph = {{funnel_graphJSON|safe}};
+        Plotly.plot('funnel_chart',funnel_graph,{});
     </script>
 </body>
 
