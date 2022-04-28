@@ -1,5 +1,5 @@
 $(document).ready(function() {
-    $('#train-preview').DataTable( {
+    var table = $('#train-preview').DataTable( {
         "scrollX": true,
         "ajax": '../static/files/train.json',
         "columns": [
@@ -10,7 +10,7 @@ $(document).ready(function() {
             { "data": "Task Category" },
             { "data": "Description" }
         ]
-    } );
+    }); 
 
     $('#test-preview').DataTable( {
         "scrollX": true,

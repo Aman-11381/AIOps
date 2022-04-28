@@ -1,5 +1,4 @@
-from turtle import color
-from flask import Flask, redirect, render_template, request, flash, send_from_directory, url_for
+from flask import Flask, redirect, render_template, request, send_from_directory, url_for
 from flask_session import Session
 from werkzeug.utils import secure_filename
 import os
@@ -9,9 +8,6 @@ import scripts.preprocess as preprocess
 import pandas as pd
 import json
 import csv
-from pathlib import Path
-import plotly
-import plotly.express as px
 
 # specifying the path where the file will be stored in the filesystem
 UPLOAD_FOLDER = "static/files"
@@ -34,14 +30,11 @@ def home():
 async def upload_train():
     if request.method == 'POST':
         if 'file' not in request.files:
-            flash("No File Part.")
             return redirect(request.url)
         file = request.files['file']
         if file.filename == '':
-            flash("No selected file")
             return redirect(request.url)
         if file and allowed_file(file.filename):
-            flash("File uploaded successfully")
             filename = secure_filename(file.filename)
             file.save(os.path.join(app.config["UPLOAD_FOLDER"], filename))
             csv_to_json(os.path.join(app.config["UPLOAD_FOLDER"], filename), "train.json")
@@ -50,11 +43,7 @@ async def upload_train():
 
 @app.route('/train_preview/<filename>')
 def train_preview(filename):
-    # train_data = pd.read_csv(os.path.join(app.config["UPLOAD_FOLDER"], filename))
-    
-    # return render_template('train_preview.html', tables=[train_data.to_html()], filename=filename)
     return render_template('train_preview.html', filename=filename)
-
 
 @app.route('/training', methods=['GET','POST'])
 async def training():
@@ -73,14 +62,11 @@ def predict():
 async def upload_test():
     if request.method == 'POST':
         if 'file' not in request.files:
-            flash("No File Part.")
             return redirect(request.url)
         file = request.files['file']
         if file.filename == '':
-            flash("No selected file")
             return redirect(request.url)
         if file and allowed_file(file.filename):
-            flash("File uploaded successfully")
             filename = secure_filename(file.filename)
             file.save(os.path.join(app.config["UPLOAD_FOLDER"], filename))
             csv_to_json(os.path.join(app.config["UPLOAD_FOLDER"], filename), "test.json")
@@ -100,35 +86,7 @@ async def predicting():
         result = pd.read_csv(os.path.join(app.config["UPLOAD_FOLDER"], filename))
         csv_to_json(os.path.join(app.config["UPLOAD_FOLDER"], filename), "result.json")
 
-        # generates a dataframe with the count values of the level column in sorted order
-        df_count = result['Level'].value_counts().rename_axis('Level').reset_index(name='counts')
-
-        fig_bar = px.bar(df_count, x='Level', y='counts', color='Level', color_discrete_map={
-            'Information': 'darkcyan',
-            'Error': 'red',
-            'Warning': 'goldenrod',
-            'Critical': 'darkred',
-        })
-
-        bar_graphJSON = json.dumps(fig_bar, cls=plotly.utils.PlotlyJSONEncoder)
-
-        fig_pie = px.pie(df_count, values=df_count['counts'], names=df_count['Level'], color='Level', color_discrete_map={
-            'Information': 'darkcyan',
-            'Error': 'red',
-            'Warning': 'goldenrod',
-            'Critical': 'darkred',
-        })
-
-        pie_graphJSON = json.dumps(fig_pie, cls=plotly.utils.PlotlyJSONEncoder)
-
-        df_source = result[result.Level.isin(['Error','Critical'])]
-        df_source = df_source['Source'].value_counts().rename_axis('Source').reset_index(name='counts').iloc[:5,:]
-
-        fig_funnel = px.funnel(df_source, x='counts', y='Source', color='Source')
-
-        funnel_graphJSON = json.dumps(fig_funnel, cls=plotly.utils.PlotlyJSONEncoder)
-
-        return render_template('result_preview.html', tables=[result.to_html()], filename=filename, bar_graphJSON=bar_graphJSON, pie_graphJSON=pie_graphJSON, funnel_graphJSON=funnel_graphJSON)
+        return render_template('result_preview.html', filename=filename)
  
 @app.route('/download', methods=['POST'])
 def download():
