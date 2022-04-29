@@ -2,7 +2,41 @@ html, body {
     max-width: 100%;
 }
 
+
 th {
     text-align: left;
     white-space: nowrap;
+}
+
+hr.solid {
+  border-top: 3px solid #543864;
+}
+
+.btn {
+    width: 20%;
+}
+
+.container-fluid {
+    font-family: 'Scope One', serif;
+}
+
+.header {
+    padding: 60px;
+    text-align: center;
+    background: #202040;
+    color: white;
+    font-size: 30px;
+}
+
+.file-upload {
+    margin-top: 2%;
+    width: 50%;
+}
+
+.sub-heading {
+    padding: 30px;
+    text-align: center;
+    background: #543864;
+    color: white;
+    font-size: 20px;
 }
