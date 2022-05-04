@@ -31,7 +31,7 @@
         
         <div class="row justify-content-center mb-3">
             <h5 class="sub-heading">Top 5 Sources of Error and Critical Logs</h5>
-            <div class="col-6 mt-3">
+            <div class="col-5 mt-3">
                 <canvas id="polar_chart"></canvas>
             </div>
         </div>
@@ -43,18 +43,22 @@
                 <p><input class="btn btn-primary" type="submit" value="Download Results"></p>
             </form>
         </div>
-        <table id="result-preview" class="table table-bordered cell-border hover display" style="width:100%">
-            <thead>
-                <tr class="table-dark">
-                    <th>Level</th>
-                    <th>Date and Time</th>
-                    <th>Source</th>
-                    <th>Event ID</th>
-                    <th>Task Category</th>
-                    <th>Description</th>
-                </tr>
-            </thead>
-        </table>
+        <div class="row justify-content-center mb-3">
+            <div class="col-11">
+                <table id="result-preview" class="table table-bordered cell-border hover display" style="width:100%">
+                    <thead>
+                        <tr class="table-dark">
+                            <th>Level</th>
+                            <th>Date and Time</th>
+                            <th>Source</th>
+                            <th>Event ID</th>
+                            <th>Task Category</th>
+                            <th>Description</th>
+                        </tr>
+                    </thead>
+                </table>
+            </div>
+        </div>
         <br>
     </div>
 

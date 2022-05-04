@@ -10,7 +10,9 @@ $(document).ready(function() {
             { "data": "Task Category" },
             { "data": "Description" }
         ]
-    }); 
+    }).rows().iterator('row', function(context, index) {
+        console.log($(this.row(index).node()));
+    });
 
     $('#test-preview').DataTable( {
         "scrollX": true,

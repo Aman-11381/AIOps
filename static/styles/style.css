@@ -8,10 +8,6 @@ th {
     white-space: nowrap;
 }
 
-hr.solid {
-  border-top: 3px solid #543864;
-}
-
 .btn {
     width: 20%;
 }

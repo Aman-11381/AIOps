@@ -66,7 +66,7 @@ $.getJSON("../static/files/result.json", function(json) {
                 }
             },
             layout: {
-                padding: 20
+                padding: 50
             }
         }
     };
@@ -81,7 +81,7 @@ $.getJSON("../static/files/result.json", function(json) {
         data: data,
         options: {
             layout: {
-                padding: 20
+                padding: 50
             }
         }
     }
@@ -118,7 +118,7 @@ $.getJSON("../static/files/result.json", function(json) {
         data: data_polar,
         options: {
             layout: {
-                padding: 20
+                padding: 50
             }
         }
     }
