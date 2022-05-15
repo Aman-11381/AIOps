@@ -1,6 +1,5 @@
 import pandas as pd
 import pickle
-from sklearn.feature_extraction.text import CountVectorizer
 
 def read_csv_file(path):
     train_df = pd.read_csv(path)

@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link rel="stylesheet" href="{{url_for('static', filename='styles/style.css')}}">
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=Scope+One&display=swap" rel="stylesheet">
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
+        <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.11.5/css/jquery.dataTables.css">
+        <title>AIOps</title>
+    </head>
+    <body>
+
+        <!-- *********************************HEADINGS************************************** -->
+
+        <div class="container-fluid" align="center">
+            <div id="train-header" class="row mb-3 header">
+                <h2>Select and Upload Training File</h2>
+            </div>
+            <div id="test-header" class="row mb-3 header" hidden>
+                <h2>Select and Upload Test File</h2>
+            </div>
+            <div id="result-header" class="row header" hidden>
+                <h2>Prediction Results</h2>
+            </div>
+            <!-- <div class="row mb-3">
+                <form id="upload-form" method="POST" action="{{ url_for('upload_train') }}" enctype="multipart/form-data">
+                    <p><input class="form-control" type="file" name="file"></p>
+                    <br>
+                    <p><input class="btn btn-primary" type="submit" value="Upload File"></p>
+                </form>
+            </div> -->
+
+            <!-- *********************************BUTTONS********************************* -->
+
+            <div id="upload-form-wrapper" class="row">
+                <form id="upload-form" method="post" action="{{ url_for('upload') }}" enctype="multipart/form-data">
+                    <p><input id="csv-file" class="form-control" type="file" name="file"></p>
+                    <br>
+                    <p><button id="upload-btn" class="btn btn-primary" type="button">Upload File</button></p>
+                </form>
+            </div>
+            <div id="train-btn-wrapper" class="row mb-3">
+                <p><button id="train-btn" class="btn btn-secondary" type="button" disabled>Train Model</button></p>
+            </div>
+            <div id="predict-btn-wrapper" class="row mb-3" hidden>
+                <p><button id="predict-btn" class="btn btn-secondary" type="button" disabled>Get Results</button></p>
+            </div>
+
+            <!-- ******************************CHARTS******************************** -->
+            
+            <div id="summary-wrapper" class="row" hidden>
+                <h5 class="sub-heading">Summary of Classified Logs</h5>
+                <div class="col-8">
+                    <canvas id='bar_chart'></canvas>
+                </div>
+                <div class="col-4">
+                    <canvas id="doughnut_chart"></canvas>
+                </div>
+            </div>
+            
+            <div id="sources-wrapper" class="row justify-content-center mb-3" hidden>
+                <h5 class="sub-heading">Top 5 Sources of Error and Critical Logs</h5>
+                <div class="col-5 mt-3">
+                    <canvas id="polar_chart"></canvas>
+                </div>
+            </div>
+
+            <div id="download-btn-wrapper" class="row mb-3" hidden>
+                <h5 class="sub-heading">Classified Logs Preview</h5>
+                <p><input id="download-btn" class="btn btn-primary" type="submit" value="Download Results"></p>
+            </div>
+
+            <!-- ************************PREVIEWS**************************** -->
+
+            <div id="train-preview-wrapper" class="row justify-content-center mb-3" hidden>
+                <div class="col-11">
+                    <table id="train-preview" class="table table-bordered cell-border hover display" style="width:100%">
+                        <thead>
+                            <tr class="table-dark">
+                                <th>Level</th>
+                                <th>Date and Time</th>
+                                <th>Source</th>
+                                <th>Event ID</th>
+                                <th>Task Category</th>
+                                <th>Description</th>
+                            </tr>
+                        </thead>
+                    </table>
+                </div>
+            </div>
+            <div id="test-preview-wrapper" class="row justify-content-center mb-3" hidden>
+                <div class="col-11">
+                    <table id="test-preview" class="table table-bordered cell-border hover display" style="width:100%">
+                        <thead>
+                            <tr class="table-dark">
+                                <th>Date and Time</th>
+                                <th>Source</th>
+                                <th>Event ID</th>
+                                <th>Task Category</th>
+                                <th>Description</th>
+                            </tr>
+                        </thead>
+                    </table>
+                </div>
+            </div>
+            <div id="result-preview-wrapper" class="row justify-content-center mb-3" hidden>
+                <div class="col-11">
+                    <table id="result-preview" class="table table-bordered cell-border hover display" style="width:100%">
+                        <thead>
+                            <tr class="table-dark">
+                                <th>Level</th>
+                                <th>Date and Time</th>
+                                <th>Source</th>
+                                <th>Event ID</th>
+                                <th>Task Category</th>
+                                <th>Description</th>
+                            </tr>
+                        </thead>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+        <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script>
+        <script src="{{url_for('static', filename='scripts/upload.js')}}"></script>
+    </body>
+</html>
